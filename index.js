@@ -51,6 +51,33 @@ app.delete("/api/persons/:id", (request, response) => {
     response.status(204).end();
 });
 
+// generate id for new person
+const generatePersonId = () => {
+    const personId = Math.floor(Math.random() * 100000)
+    return personId;
+}
+
+// add person
+app.post("/api/persons", (request, response) => {
+    const body = request.body
+    if (!body.name || !body.number) {
+        return response.status(400).json({
+            error: 'content missing'
+        })
+    }
+
+    const person = {
+        id: generatePersonId(),
+        name: body.name,
+        number: body.number
+    };
+
+    persons = persons.concat(person);
+
+    response.json(person);
+
+})
+
 // show info page
 app.get("/info", (request, response) => {
     const timestamp = new Date();
