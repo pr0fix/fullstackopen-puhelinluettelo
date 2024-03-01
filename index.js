@@ -44,7 +44,12 @@ app.get("/api/persons/:id", (request, response) => {
     };
 });
 
-
+// delete person
+app.delete("/api/persons/:id", (request, response) => {
+    const id = Number(request.params.id);
+    persons = persons.filter(person => person.id !== id);
+    response.status(204).end();
+});
 
 // show info page
 app.get("/info", (request, response) => {
