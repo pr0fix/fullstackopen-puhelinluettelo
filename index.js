@@ -26,13 +26,21 @@ let persons = [
         number: "39-23-6423122"
 
     }
-]
+];
 
 app.get("/api/persons", (request, response) => {
     response.json(persons);
 });
 
+app.get("/info", (request, response) => {
+    const timestamp = new Date();
+    response.send(
+        `Phonebook has info for ${persons.length} people <br/>
+        ${timestamp}`
+    );
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-})
+    console.log(`Server running on port ${PORT}`);
+});
