@@ -3,8 +3,18 @@ const morgan = require('morgan');
 const app = express();
 
 app.use(express.json());
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
+// create morgan token to show request body on POST-request
+morgan.token('body', request => {
+    if (request.method === 'POST') {
+        return JSON.stringify(request.body);
+    } else {
+        return '';
+    }
+});
+
+// initialize phonebook
 let persons = [
     {
         id: 1,
@@ -55,7 +65,7 @@ app.delete("/api/persons/:id", (request, response) => {
 
 // generate id for new person
 const generatePersonId = () => {
-    const personId = Math.floor(Math.random() * 100000)
+    const personId = Math.floor(Math.random() * 5000);
     return personId;
 }
 
@@ -65,17 +75,17 @@ app.post("/api/persons", (request, response) => {
     if (!body.name) {
         return response.status(400).json({
             error: 'name information missing'
-        })
+        });
     } else if (!body.number) {
         return response.status(400).json({
             error: 'number information missing'
-        })
+        });
     }
 
     if (persons.some(person => person.name === body.name)) {
         return response.status(400).json({
             error: 'name must be unique'
-        })
+        });
     } else {
         const person = {
             id: generatePersonId(),
@@ -86,9 +96,9 @@ app.post("/api/persons", (request, response) => {
         persons = persons.concat(person);
 
         response.json(person);
-    }
+    };
 
-})
+});
 
 // show info page
 app.get("/info", (request, response) => {
@@ -99,6 +109,7 @@ app.get("/info", (request, response) => {
     );
 });
 
+// define and configure server port
 const PORT = 3001;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
