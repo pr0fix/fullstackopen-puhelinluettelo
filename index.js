@@ -60,21 +60,31 @@ const generatePersonId = () => {
 // add person
 app.post("/api/persons", (request, response) => {
     const body = request.body
-    if (!body.name || !body.number) {
+    if (!body.name) {
         return response.status(400).json({
-            error: 'content missing'
+            error: 'name information missing'
+        })
+    } else if (!body.number) {
+        return response.status(400).json({
+            error: 'number information missing'
         })
     }
 
-    const person = {
-        id: generatePersonId(),
-        name: body.name,
-        number: body.number
-    };
+    if (persons.some(person => person.name === body.name)) {
+        return response.status(400).json({
+            error: 'name must be unique'
+        })
+    } else {
+        const person = {
+            id: generatePersonId(),
+            name: body.name,
+            number: body.number
+        };
 
-    persons = persons.concat(person);
+        persons = persons.concat(person);
 
-    response.json(person);
+        response.json(person);
+    }
 
 })
 
