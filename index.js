@@ -10,7 +10,7 @@ morgan.token('body', request => {
     if (request.method === 'POST') {
         return JSON.stringify(request.body);
     } else {
-        return '';
+        return ' ';
     }
 });
 
