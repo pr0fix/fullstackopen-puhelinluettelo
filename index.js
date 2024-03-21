@@ -90,6 +90,23 @@ app.delete("/api/persons/:id", (request, response, next) => {
     .catch(error => next(error));
 });
 
+//update person
+app.put("/api/persons/:id", (request, response, next) => {
+    const body = request.body;
+
+    const person = {
+        id: request.params.id,
+        name: body.name,
+        number: body.number
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, {new: true})
+        .then(updatedPerson => {
+            response.json(updatedPerson);
+        })
+        .catch(error => next(error));
+});
+
 // add person
 app.post("/api/persons", (request, response) => {
     const body = request.body;
